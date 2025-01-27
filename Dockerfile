@@ -2,7 +2,7 @@ FROM node:20-bullseye-slim as build
 
 WORKDIR /bonob
 
-COPY .git ./.git
+# COPY .git ./.git
 COPY src ./src
 COPY docs ./docs
 COPY typings ./typings
@@ -21,15 +21,15 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get -y install --no-install-recommends \
-        libvips-dev \
-        python3 \
-        make \
-        git \
-        g++ && \
+    libvips-dev \
+    python3 \
+    make \
+    git \
+    g++ && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     npm install && \
-#    npm test && \
+    #    npm test && \
     npm run gitinfo && \
     npm run build && \
     rm -Rf node_modules && \
@@ -39,9 +39,9 @@ RUN apt-get update && \
 FROM node:20-bullseye-slim
 
 LABEL   maintainer="simojenki" \
-        org.opencontainers.image.source="https://github.com/simojenki/bonob" \
-        org.opencontainers.image.description="bonob SONOS SMAPI implementation" \
-        org.opencontainers.image.licenses="GPLv3"
+    org.opencontainers.image.source="https://github.com/simojenki/bonob" \
+    org.opencontainers.image.description="bonob SONOS SMAPI implementation" \
+    org.opencontainers.image.licenses="GPLv3"
 
 ENV BNB_PORT=4534
 ENV DEBIAN_FRONTEND=noninteractive
@@ -63,15 +63,15 @@ COPY src/Sonoswsdl-1.19.4-20190411.142401-3.wsdl ./src/Sonoswsdl-1.19.4-20190411
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get -y install --no-install-recommends \
-        libvips \
-        tzdata \
-        wget && \
+    libvips \
+    tzdata \
+    wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-USER nobody 
+USER nobody
 WORKDIR /bonob/src
 
-HEALTHCHECK CMD wget -O- http://localhost:${BNB_PORT}/about || exit 1   
+HEALTHCHECK CMD wget -O- http://localhost:${BNB_PORT}/about || exit 1
 
 CMD ["node", "app.js"]
